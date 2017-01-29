@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit
+    colors="true"
+    bootstrap="./vendor/autoload.php">
+    <testsuites>
+        <testsuite name="zf-apigility-skeleton">
+            <directory>./module/Application/test</directory>
+        </testsuite>
+    </testsuites>
+
+    <testsuites>
+        <testsuite name="my company repos">
+            <directory>./module/MyCompany/test</directory>
+        </testsuite>
+    </testsuites>
+
+    <logging>
+        <log type="coverage-html" target="./tests-log/codeCoverage" charset="UTF-8"
+             yui="true" highlight="true" lowUpperBound="50" highLowerBound="80"
+             showUncoveredFiles="false" />
+        <!-- <log type="testdox-html" target="./log/testdox.html" /> -->
+    </logging>
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">./module</directory>
+        </whitelist>
+    </filter>
+</phpunit>
