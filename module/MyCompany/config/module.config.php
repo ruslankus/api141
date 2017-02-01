@@ -11,6 +11,10 @@ return array(
         'template_path_stack' => array(
             __DIR__ . '/../view',
         ),
+        'template_map' => [
+            'MyCompany/mail/user/signup' => __DIR__ . "/../view/my-company/mail/user/signup.phtml",
+            'MyCompany/mail/user/forgot-password' => __DIR__ . "/../view/my-company/mail/user/forgot-password.phtml",
+        ]
     ),
 
 

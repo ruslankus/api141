@@ -103,6 +103,135 @@ class UserServiceTest extends AbstractHttpControllerTestCase
     }
 
 
+    public function testFetchUser()
+    {
+        $email = 'ruslankus@yahoo.com';
+        $password = 'abc1234';
+        $userService = $this->serviceManager->get(UserService::class);
+        $userObj = $userService->registerUser($email,$password);
+
+        $this->assertInstanceOf(User::class,$userObj);
+
+        $expectedOutput = $userService->fetchUser($email);
+        $this->assertInstanceOf(User::class, $expectedOutput);
+    }
+
+
+    public function testForgetPassword()
+    {
+        $email = 'ruslankus@yahoo.com';
+        $password = 'abc1234';
+        $userService = $this->serviceManager->get(UserService::class);
+        $userObj = $userService->registerUser($email,$password);
+
+        $this->assertInstanceOf(User::class,$userObj);
+        //forget passwprd
+        $responce = $userService->forgotPassword($email);
+
+        $this->assertInternalType('array',$responce);
+        $this->assertArrayHasKey('isMailSent', $responce);
+        $this->assertTrue($responce['isMailSent']);
+
+    }
+
+
+    public function testForgotPassowrdWrongEmail()
+    {
+        $email = 'ruslankus@yahoo.com';
+        $password = 'abc1234';
+        $userService = $this->serviceManager->get(UserService::class);
+        $userObj = $userService->registerUser($email,$password);
+
+        $this->assertInstanceOf(User::class,$userObj);
+
+        $wrongMail = "test@teest.com";
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage(UserService::ERROR_USER_NOT_FOUND_MSG);
+        $responce = $userService->forgotPassword($wrongMail);
+    }
+
+
+    public function testNotFoundUser()
+    {
+        $email = 'ruslankus@yahoo.com';
+
+        $userService = $this->serviceManager->get(UserService::class);
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage(UserService::ERROR_USER_NOT_FOUND_MSG);
+
+        $expectedOutput = $userService->fetchUser($email);
+    }
+
+
+    public function testResetPassword()
+    {
+        $email = 'ruslankus@yahoo.com';
+        $password = 'abc1234';
+        $userService = $this->serviceManager->get(UserService::class);
+        $userObj = $userService->registerUser($email,$password);
+
+        $this->assertInstanceOf(User::class,$userObj);
+
+        $newPassword = "def5678";
+        $stringToHash = $userObj->getId() .
+            $userObj->getEmail() .
+            $userObj->getPassword() .
+            $userObj->getCreatedAt()->getTimestamp();
+        $resetToken = hash('sha256',$stringToHash);
+        $userResetObj = $userService->resetPassword($email,$resetToken,$newPassword);
+        $this->assertInstanceOf(User::class, $userResetObj);
+
+    }
+
+
+    public function testResetPassowrdWrongEmail()
+    {
+        $email = 'ruslankus@yahoo.com';
+        $password = 'abc1234';
+        $userService = $this->serviceManager->get(UserService::class);
+        $userObj = $userService->registerUser($email,$password);
+
+        $this->assertInstanceOf(User::class,$userObj);
+
+        $wrongMail = "test@teest.com";
+        $newPass = "123456";
+        $stringToHash = $userObj->getId() .
+            $userObj->getEmail() .
+            $userObj->getPassword() .
+            $userObj->getCreatedAt()->getTimestamp();
+        $resetToken = hash('sha256',$stringToHash);
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage(UserService::ERROR_USER_NOT_FOUND_MSG);
+        $responce = $userService->resetPassword($wrongMail, $resetToken,$newPass);
+
+    }
+
+
+    public function testResetPassowrdWrongToken()
+    {
+        $email = 'ruslankus@yahoo.com';
+        $password = 'abc1234';
+        $userService = $this->serviceManager->get(UserService::class);
+        $userObj = $userService->registerUser($email,$password);
+
+        $this->assertInstanceOf(User::class,$userObj);
+
+        $wrongMail = "test@teest.com";
+        $newPass = "123456";
+        $stringToHash = $userObj->getId() .
+            $wrongMail .
+            $userObj->getPassword() .
+            $userObj->getCreatedAt()->getTimestamp();
+        $wrongToken = hash('sha256',$stringToHash);
+
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage(UserService::ERROR_UINVALD_RESET_TOKEN_MSG);
+        $responce = $userService->resetPassword($email, $wrongToken,$newPass);
+    }
+
+
 
 
 

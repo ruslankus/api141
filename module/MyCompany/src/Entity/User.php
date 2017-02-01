@@ -5,64 +5,73 @@ namespace MyCompany\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * User
- *
- * @ORM\Table(name="user")
  * @ORM\Entity
+ * @ORM\Table(name="user")
  */
 class User
 {
     /**
-     * @var integer
-     *
-     * @ORM\Column(name="id", type="integer", precision=0, scale=0, nullable=false, unique=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Column(type="integer")
      */
-    private $id;
+    protected $id;
 
     /**
-     * @var string
+     * @ORM\Column(type="string",unique=true)
+     */
+    protected $email;
+
+    /**
+     * @ORM\Column(type="string")
+     */
+    protected $password;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    protected $createdAt;
+
+    /**
+     * @ORM\Column(type="boolean")
      *
-     * @ORM\Column(name="email", type="string", precision=0, scale=0, nullable=false, unique=true)
-     */
-    private $email;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="password", type="string", precision=0, scale=0, nullable=false, unique=false)
-     */
-    private $password;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="createdAt", type="datetime", precision=0, scale=0, nullable=false, unique=false)
-     */
-    private $createdAt;
-
-    /**
      * @var boolean
-     *
-     * @ORM\Column(name="isEmailConfirmed", type="boolean", precision=0, scale=0, nullable=false, unique=false)
      */
-    private $isEmailConfirmed;
+    protected $isEmailConfirmed;
 
     /**
+     * @ORM\Column(type="boolean")
+     *
      * @var boolean
-     *
-     * @ORM\Column(name="isActivated", type="boolean", precision=0, scale=0, nullable=false, unique=false)
      */
-    private $isActivated;
+    protected $isActivated;
 
     /**
-     * @var array
-     *
-     * @ORM\Column(name="roles", type="array", precision=0, scale=0, nullable=false, unique=false)
+     * @ORM\Column(type="array")
      */
-    private $roles;
+    protected $roles;
 
+
+    // OAUTH
+    protected $client;
+
+    protected $accessToken;
+
+    protected $authorizationCode;
+
+    protected $refreshToken;
+
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->client = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->accessToken = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->authorizationCode = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->refreshToken = new \Doctrine\Common\Collections\ArrayCollection();
+    }
 
     /**
      * Get id
@@ -217,5 +226,140 @@ class User
     {
         return $this->roles;
     }
-}
 
+    /**
+     * Add client
+     *
+     * @param \ZF\OAuth2\Doctrine\Entity\Client $client
+     *
+     * @return User
+     */
+    public function addClient(\ZF\OAuth2\Doctrine\Entity\Client $client)
+    {
+        $this->client[] = $client;
+
+        return $this;
+    }
+
+    /**
+     * Remove client
+     *
+     * @param \ZF\OAuth2\Doctrine\Entity\Client $client
+     */
+    public function removeClient(\ZF\OAuth2\Doctrine\Entity\Client $client)
+    {
+        $this->client->removeElement($client);
+    }
+
+    /**
+     * Get client
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getClient()
+    {
+        return $this->client;
+    }
+
+    /**
+     * Add accessToken
+     *
+     * @param \ZF\OAuth2\Doctrine\Entity\AccessToken $accessToken
+     *
+     * @return User
+     */
+    public function addAccessToken(\ZF\OAuth2\Doctrine\Entity\AccessToken $accessToken)
+    {
+        $this->accessToken[] = $accessToken;
+
+        return $this;
+    }
+
+    /**
+     * Remove accessToken
+     *
+     * @param \ZF\OAuth2\Doctrine\Entity\AccessToken $accessToken
+     */
+    public function removeAccessToken(\ZF\OAuth2\Doctrine\Entity\AccessToken $accessToken)
+    {
+        $this->accessToken->removeElement($accessToken);
+    }
+
+    /**
+     * Get accessToken
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getAccessToken()
+    {
+        return $this->accessToken;
+    }
+
+    /**
+     * Add authorizationCode
+     *
+     * @param \ZF\OAuth2\Doctrine\Entity\AuthorizationCode $authorizationCode
+     *
+     * @return User
+     */
+    public function addAuthorizationCode(\ZF\OAuth2\Doctrine\Entity\AuthorizationCode $authorizationCode)
+    {
+        $this->authorizationCode[] = $authorizationCode;
+
+        return $this;
+    }
+
+    /**
+     * Remove authorizationCode
+     *
+     * @param \ZF\OAuth2\Doctrine\Entity\AuthorizationCode $authorizationCode
+     */
+    public function removeAuthorizationCode(\ZF\OAuth2\Doctrine\Entity\AuthorizationCode $authorizationCode)
+    {
+        $this->authorizationCode->removeElement($authorizationCode);
+    }
+
+    /**
+     * Get authorizationCode
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getAuthorizationCode()
+    {
+        return $this->authorizationCode;
+    }
+
+    /**
+     * Add refreshToken
+     *
+     * @param \ZF\OAuth2\Doctrine\Entity\RefreshToken $refreshToken
+     *
+     * @return User
+     */
+    public function addRefreshToken(\ZF\OAuth2\Doctrine\Entity\RefreshToken $refreshToken)
+    {
+        $this->refreshToken[] = $refreshToken;
+
+        return $this;
+    }
+
+    /**
+     * Remove refreshToken
+     *
+     * @param \ZF\OAuth2\Doctrine\Entity\RefreshToken $refreshToken
+     */
+    public function removeRefreshToken(\ZF\OAuth2\Doctrine\Entity\RefreshToken $refreshToken)
+    {
+        $this->refreshToken->removeElement($refreshToken);
+    }
+
+    /**
+     * Get refreshToken
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getRefreshToken()
+    {
+        return $this->refreshToken;
+    }
+}

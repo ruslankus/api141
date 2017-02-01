@@ -33,7 +33,9 @@
         "zfcampus/zf-development-mode": "^3.1",
         "doctrine/doctrine-orm-module": "^1.1",
         "zendframework/zend-mvc-console": "^1.1",
-        "zendframework/zend-test": "^3.0"
+        "zendframework/zend-test": "^3.0",
+        "api-skeletons/zf-oauth2-doctrine": "^1.0",
+        "zendframework/zend-mail": "^2.7"
     },
     "require-dev": {
         "zendframework/zend-developer-tools": "^1.1",

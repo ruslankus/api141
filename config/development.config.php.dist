@@ -7,6 +7,8 @@
 return [
     // Development time modules
     'modules' => [
+        'Zend\Mail',
+        'Zend\I18n',
         'Zend\Mvc\Console',
         'Zend\Cache',
         'Zend\Form',
