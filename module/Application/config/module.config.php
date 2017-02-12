@@ -9,6 +9,7 @@ namespace Application;
 use Zend\ServiceManager\Factory\InvokableFactory;
 
 return [
+
     'router' => [
         'routes' => [
             'home' => [
@@ -23,6 +24,7 @@ return [
             ],
         ],
     ],
+
     'controllers' => [
         'factories' => [
             Controller\IndexController::class => InvokableFactory::class,

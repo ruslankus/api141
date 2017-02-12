@@ -12,6 +12,9 @@ use ZF\Apigility\Application;
  * to the application root now.
  */
 chdir(dirname(__DIR__));
+error_reporting(E_ALL);
+ini_set('display_startup_errors',1);
+ini_set('display_errors',1);
 
 // Redirect legacy requests to enable/disable development mode to new tool
 if (php_sapi_name() === 'cli'

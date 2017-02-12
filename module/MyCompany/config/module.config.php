@@ -4,8 +4,37 @@ namespace MyCompany;
 
 use Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain;
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
+use MyCompany\Controller\UserResetPasswordController;
+use Zend\Router\Http\Segment;
+use Zend\ServiceManager\Factory\InvokableFactory;
 
 return array(
+
+
+
+    'router' => [
+        'routes' => [
+            'reset-pass' => [
+                'type' => Segment::class,
+                'options' => [
+                    'route'    => '/user-reset-password/[:email]/[:token]',
+                    'defaults' => [
+                        'controller' => 'reset-pass',
+                        'action'     => 'index',
+                    ],
+                ],
+            ],
+        ],
+    ],
+
+    'controllers' => [
+        'aliases' => [
+            'reset-pass' => UserResetPasswordController::class
+        ],
+        'factories' => [
+            UserResetPasswordController::class => InvokableFactory::class,
+        ],
+    ],
 
     'view_manager' => array(
         'template_path_stack' => array(

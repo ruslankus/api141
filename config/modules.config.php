@@ -13,6 +13,7 @@ return [
     'Zend\\Router',
     'Zend\\Validator',
     'Zend\\Mail',
+    'MyCompany',
     'ZF\\Apigility',
     'ZF\\Apigility\\Documentation',
     'ZF\\ApiProblem',
@@ -29,7 +30,6 @@ return [
     'Application',
     'DoctrineModule',
     'DoctrineORMModule',
-    'MyCompany',
     'Application',
     'Identity',
 ];
