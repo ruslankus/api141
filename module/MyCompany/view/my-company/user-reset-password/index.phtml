@@ -1,4 +1,7 @@
-<?php $obj = $this ?>
+<?php
+$obj = $this;
+$request = $this->requestedParams;
+?>
 <?= $this->doctype() ?>
 <html lang="en">
 <head>
@@ -19,6 +22,89 @@
 ?>
 </head>
 <body>
+
+<script type="text/javascript">
+
+    var requestData = <?php echo json_encode($request);?>
+
+        jQuery(document).ready(function () {
+
+            $('#reset-password-form input[name="token"]').val(requestData.token);
+            $('#reset-password-form input[name="email"]').val(requestData.email);
+
+            $('#reset-password-form').submit(function(e) {
+                e.preventDefault();
+
+                var formData = new FormData($(this)[0]);
+
+                var pass1 = $('#password1').val();
+                var pass2 = $('#password2').val();
+
+                console.log(pass1, pass2);
+                console.log(formData);
+
+                //check pasword
+                if (pass1 !== pass2) {
+                    $('div.console').text('Passwords must match!');
+                    $('div.console').removeClass('hidden');
+                    return false;
+                }
+
+                $.ajax({
+                    url: '/account/finish-password-reset',
+                    type: 'POST',
+                    contentType: false,
+                    data: formData,
+                    processData: false,
+                    error: function (data) {
+
+                        if (typeof data.responseText !== "undefined") {
+                            var responseJSON = $.parseJSON(data.responseText);
+                            var consoleLog = "";
+
+                            if (typeof responseJSON.validation_messages !== "undefined") {
+                                for (var i in responseJSON.validation_messages) {
+                                    consoleLog = consoleLog + "<br />" + i;
+
+                                    for (var n in responseJSON.validation_messages[i]) {
+                                        consoleLog = consoleLog + ' validator: ' + n + ' - ' + responseJSON.validation_messages[i][n]
+                                    }
+                                }
+                            } else {
+
+                                var consoleLog = responseJSON.detail;
+
+                            }
+
+                            $('div.console').html(consoleLog);
+                        } else {
+                            var errorMessage = JSON.stringify(data);
+                        }
+
+                        $('div.console').removeClass('hidden');
+                        console.log(responseJSON);
+                    },//function
+
+                    beforeSend : function () {
+                        $('div.console').html("Attempting to reset password");
+                        $('div.console').removeClass('hidden');
+                    },
+
+                    success : function (data) {
+                        $('div.console').html(JSON.stringify(data));
+                        $('div.console').removeClass('hidden');
+
+                        //window.location.replace('http://localhost/log-me-in');
+                    }
+
+
+
+                });
+
+            });//reset form
+        });//document ready
+
+</script>
 
 <div class="container">
     <div class="row">

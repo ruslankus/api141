@@ -6,8 +6,10 @@ use MyCompany\Entity\User;
 use RuntimeException;
 use Zend\Crypt\Password\Bcrypt;
 use Zend\Mail\Message;
+use Zend\Mime\Mime;
+use Zend\Mime\Message as MimeMessage;
 use Zend\Mail\Transport\Smtp as SmtpTransport;
-use Zend\Mime\Part;
+use Zend\Mime\Part as MimePart;
 use Zend\Mvc\Console\View\ViewModel;
 use Zend\View\Renderer\RendererInterface;
 
@@ -98,9 +100,13 @@ class UserService implements UserServiceInterface
         $message->setSubject('Welcome to My Company! Please activate your account');
         $message->setFrom('ruslan@prophp.eu');
 
-        $htmlPart = new Part($mailContent);
-        $body = new \Zend\Mime\Message();
-        $body->setParts(array($htmlPart));
+        $htmlPart = new MimePart($mailContent);
+        $htmlPart->type = Mime::TYPE_HTML;
+        $htmlPart->charset = 'utf-8';
+        $htmlPart->encoding = Mime::ENCODING_QUOTEDPRINTABLE;
+
+        $body = new MimeMessage();
+        $body->setParts([$htmlPart]);
         $message->setTo($userObj->getEmail());
         $message->setBody($body);
         $this->mailTransport->send($message);
